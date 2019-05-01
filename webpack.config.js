@@ -61,7 +61,8 @@ module.exports = function(env) {
 			new CopyPlugin([
 				{from: 'node_modules/webix/webix.css', to: ''},
 				{from: 'node_modules/webix/fonts', to: 'fonts'},
-				{from: 'node_modules/webix/skins', to: 'skins'}
+				{from: 'node_modules/webix/skins', to: 'skins'},
+				{from: 'node_modules/@mdi/font', to: 'mdi'}
 			])
 		],
 		devServer:{

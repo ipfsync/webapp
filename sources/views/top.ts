@@ -10,7 +10,11 @@ export default class TopView extends JetView{
 			elements: [
 				{ view: "icon", icon: "mdi mdi-menu",
 					width: 37, align: "left", click: () => {
-						// this.$$("$sidebar1").toggle();
+						let sidebar = (<sidebar>this.$$("sidebar"));
+						sidebar.toggle();
+						if (!sidebar.config.collapsed) {
+							sidebar.openAll()
+						}
 					}
 				},
 				{ view: "label", label: "My App"},
