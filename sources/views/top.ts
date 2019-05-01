@@ -1,4 +1,6 @@
 import {JetView, plugins} from "webix-jet";
+import {ui} from "webix";
+import sidebar = ui.sidebar;
 
 
 export default class TopView extends JetView{
@@ -19,7 +21,7 @@ export default class TopView extends JetView{
 		};
 
 		const menu_data = [
-			{id: "collections", icon: "mdi mdi-view-dashboard", value: "Dashboards",  data:[
+			{id: "collections", icon: "mdi mdi-file-cabinet", value: "Collections",  data:[
 					{ id: "dashboard1", value: "Dashboard 1"},
 					{ id: "dashboard2", value: "Dashboard 2"}
 				]},
@@ -30,7 +32,10 @@ export default class TopView extends JetView{
 		];
 
 		const sidebar = {
-
+			view: "sidebar",
+			localId: "sidebar",
+			multipleOpen: true,
+			data: menu_data
 		};
 
 		return {
@@ -38,6 +43,7 @@ export default class TopView extends JetView{
 				header,
 				{
 					cols: [
+						sidebar,
 						{$subview: true}
 					]
 				}
@@ -45,6 +51,7 @@ export default class TopView extends JetView{
 		};
 	}
 	init(){
+		(<sidebar>this.$$('sidebar')).openAll()
 		// this.use(plugins.Menu, "top:menu");
 	}
 }
