@@ -3,36 +3,29 @@ import {ui} from "webix";
 import sidebar = ui.sidebar;
 
 
-export default class TopView extends JetView{
-	config(){
+export default class TopView extends JetView {
+	config() {
 		const header = {
-			view:"toolbar",
+			view: "toolbar",
 			elements: [
-				{ view: "icon", icon: "mdi mdi-menu",
-					width: 37, align: "left", click: () => {
-						let sidebar = (<sidebar>this.$$("sidebar"));
-						sidebar.toggle();
-						if (!sidebar.config.collapsed) {
-							sidebar.openAll()
-						}
-					}
-				},
-				{ view: "label", label: "My App"},
-				{},
-				{ view: "icon", width: 45, icon: "mdi mdi-comment",  badge:4},
-				{ view: "icon", width: 45, icon: "mdi mdi-bell",  badge:10}
+				{view: "label", label: "IPFSync", align: "center"},
 			]
 		};
 
 		const menu_data = [
-			{id: "collections", icon: "mdi mdi-file-cabinet", value: "Collections",  data:[
-					{ id: "dashboard1", value: "Dashboard 1"},
-					{ id: "dashboard2", value: "Dashboard 2"}
-				]},
-			{id: "transfers", icon: "mdi mdi-view-column", value:"Layouts", data:[
-					{ id: "accordions", value: "Accordions"},
-					{ id: "portlets", value: "Portlets"}
-				]},
+			{
+				id: "collections", icon: "mdi mdi-file-cabinet", value: "Collections", data: [
+					{id: "collections_all", value: "All Collections"},
+					{id: "collections_my", value: "My Collections"}
+				]
+			},
+			{
+				id: "transfers", icon: "mdi mdi-download-multiple", value: "Transfers", data: [
+					{id: "transfers_all", value: "All"},
+					{id: "transfers_downloading", value: "Downloading"},
+					{id: "transfers_completed", value: "Completed"},
+				]
+			},
 		];
 
 		const sidebar = {
@@ -40,6 +33,13 @@ export default class TopView extends JetView{
 			localId: "sidebar",
 			multipleOpen: true,
 			data: menu_data
+		};
+
+		const footer = {
+			view: "toolbar",
+			elements: [
+				{view: "label", label: "Ready."},
+			]
 		};
 
 		return {
@@ -50,12 +50,13 @@ export default class TopView extends JetView{
 						sidebar,
 						{$subview: true}
 					]
-				}
+				},
+				footer
 			]
 		};
 	}
-	init(){
+
+	init() {
 		(<sidebar>this.$$('sidebar')).openAll()
-		// this.use(plugins.Menu, "top:menu");
 	}
 }

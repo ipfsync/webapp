@@ -14,7 +14,7 @@ export default class MyApp extends JetApp{
 			id 		: APPNAME,
 			version : VERSION,
 			debug 	: !PRODUCTION,
-			start 	: "/top/start",
+			start 	: "/top/collections",
 			webix
 		};
 
