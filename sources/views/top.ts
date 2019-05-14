@@ -1,9 +1,11 @@
-import {JetView, plugins} from "webix-jet";
+import {IJetView, JetView, plugins} from "webix-jet";
 import {ui} from "webix";
 import sidebar = ui.sidebar;
-
+import PeersWindowView from "../views/windows/peers"
+import {IBaseView} from "webix-jet/dist/types/interfaces";
 
 export default class TopView extends JetView {
+	private peer_window: PeersWindowView;
 	config() {
 		const header = {
 			view: "toolbar",
@@ -39,6 +41,11 @@ export default class TopView extends JetView {
 			view: "toolbar",
 			elements: [
 				{view: "label", label: "Ready."},
+				{},
+				{view: "icon", icon: "mdi mdi-resistor-nodes", click: ()=> {
+						this.peer_window.showWindow()
+					}
+				}
 			]
 		};
 
@@ -58,5 +65,6 @@ export default class TopView extends JetView {
 
 	init() {
 		(<sidebar>this.$$('sidebar')).openAll()
+		this.peer_window = <PeersWindowView>this.ui(PeersWindowView);
 	}
 }
