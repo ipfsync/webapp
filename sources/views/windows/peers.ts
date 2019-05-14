@@ -1,6 +1,8 @@
 import {JetView} from "webix-jet";
 import {ui} from "webix";
 import baseview = ui.baseview;
+import {peers} from "../../models/peers"
+import datatable = ui.datatable;
 
 export default class PeersWindowView extends JetView {
 	config(): any {
@@ -9,14 +11,20 @@ export default class PeersWindowView extends JetView {
 			head: "Connected Peers",
 			close: true,
 			move: true,
-			position:"center",
+			position: "center",
 			body: {
 				view: "datatable",
+				localId: "dtable",
+				header: false,
 				columns: [
-					{id: "addr", header: "MultiAddr"}
+					{id: "addr", header: "MultiAddr", fillspace: true}
 				]
 			}
 		}
+	}
+
+	init(): void {
+		(<datatable>this.$$('dtable')).sync(peers, null, null)
 	}
 
 	showWindow(): any {

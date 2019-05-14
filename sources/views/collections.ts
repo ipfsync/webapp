@@ -18,8 +18,8 @@ export default class CollectionsView extends JetView {
 					body: {
 						view: "datatable",
 						columns: [
-							{header: "Name"},
-							{header: "Description"},
+							{header: "Name", fillspace: 1},
+							{header: "Description", fillspace: 3},
 						]
 					}
 				}
