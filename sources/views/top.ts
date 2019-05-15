@@ -3,6 +3,7 @@ import {ui} from "webix";
 import sidebar = ui.sidebar;
 import PeersWindowView from "../views/windows/peers"
 import {IBaseView} from "webix-jet/dist/types/interfaces";
+import WSClient from "models/websocket";
 
 export default class TopView extends JetView {
 	private peer_window: PeersWindowView;
@@ -64,7 +65,10 @@ export default class TopView extends JetView {
 	}
 
 	init() {
-		(<sidebar>this.$$('sidebar')).openAll()
+		(<sidebar>this.$$('sidebar')).openAll();
 		this.peer_window = <PeersWindowView>this.ui(PeersWindowView);
+
+		// Start Websocket
+		let ws = new WSClient();
 	}
 }

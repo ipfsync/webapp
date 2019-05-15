@@ -2,7 +2,7 @@
 export default class WSClient {
 	private readonly socket: WebSocket;
 	constructor() {
-		this.socket = new WebSocket('ws://localhost:8080');
+		this.socket = new WebSocket('ws://localhost:8080/ws');
 		this.socket.addEventListener('open', function (event) {
 			console.log("Websocket connected.")
 		});
