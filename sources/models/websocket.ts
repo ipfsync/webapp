@@ -1,5 +1,6 @@
 import {peers} from "models/peers";
 
+// TODO: Auto reconnect
 export default class WSClient {
 	private readonly socket: WebSocket;
 	constructor() {

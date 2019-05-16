@@ -1,12 +1,14 @@
-import {IJetView, JetView, plugins} from "webix-jet";
+import {JetView} from "webix-jet";
 import {ui} from "webix";
 import sidebar = ui.sidebar;
 import PeersWindowView from "../views/windows/peers"
-import {IBaseView} from "webix-jet/dist/types/interfaces";
+import {peers} from "models/peers";
 import WSClient from "models/websocket";
+import icon = ui.icon;
 
 export default class TopView extends JetView {
 	private peer_window: PeersWindowView;
+
 	config() {
 		const header = {
 			view: "toolbar",
@@ -43,7 +45,11 @@ export default class TopView extends JetView {
 			elements: [
 				{view: "label", label: "Ready."},
 				{},
-				{view: "icon", icon: "mdi mdi-resistor-nodes", click: ()=> {
+				{
+					view: "icon", localId: "peersIcon", icon: "mdi mdi-resistor-nodes",
+					value: 0,
+					tooltip: "#value# peer(s) connected.",
+					click: () => {
 						this.peer_window.showWindow()
 					}
 				}
@@ -70,5 +76,13 @@ export default class TopView extends JetView {
 
 		// Start Websocket
 		let ws = new WSClient();
+
+		// Peers DataCollection event
+		let peersIcon = <icon>this.$$('peersIcon');
+		peers.attachEvent("onAfterLoad", () => {
+			peersIcon.setValue(peers.count().toString())
+		})
+
+		// TODO: Request peers info once
 	}
 }
