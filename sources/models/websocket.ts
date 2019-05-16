@@ -1,3 +1,4 @@
+import {peers} from "models/peers";
 
 export default class WSClient {
 	private readonly socket: WebSocket;
@@ -8,7 +9,22 @@ export default class WSClient {
 		});
 
 		this.socket.addEventListener('message', function (event) {
-			console.log('Message from server ', event.data)
+			let msg = JSON.parse(event.data);
+
+			console.log('Message from server ', msg);
+
+			switch (msg.Event) {
+				case 'peers':
+					let peersinfo = msg.Data.peers;
+
+					for (let [idx, p] of peersinfo.entries()) {
+						peersinfo[idx]['id'] = p['Address']
+					}
+
+					peers.clearAll(true);
+					peers.parse(peersinfo, 'json')
+			}
+
 		});
 	}
 

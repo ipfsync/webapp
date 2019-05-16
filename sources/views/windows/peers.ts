@@ -1,7 +1,7 @@
 import {JetView} from "webix-jet";
 import {ui} from "webix";
 import baseview = ui.baseview;
-import {peers} from "../../models/peers"
+import {peers} from "models/peers"
 import datatable = ui.datatable;
 
 export default class PeersWindowView extends JetView {
@@ -17,7 +17,7 @@ export default class PeersWindowView extends JetView {
 				localId: "dtable",
 				header: false,
 				columns: [
-					{id: "addr", header: "MultiAddr", fillspace: true}
+					{id: "Address", header: "MultiAddr", fillspace: true}
 				]
 			}
 		}
