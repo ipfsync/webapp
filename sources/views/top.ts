@@ -75,7 +75,8 @@ export default class TopView extends JetView {
 		this.peer_window = <PeersWindowView>this.ui(PeersWindowView);
 
 		// Start Websocket
-		let ws = new WSClient();
+		let ws = new WSClient('ws://localhost:8080/ws');
+		ws.open();
 
 		// Peers DataCollection event
 		let peersIcon = <icon>this.$$('peersIcon');

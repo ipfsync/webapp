@@ -1,32 +1,63 @@
 import {peers} from "models/peers";
 
-// TODO: Auto reconnect
 export default class WSClient {
-	private readonly socket: WebSocket;
-	constructor() {
-		this.socket = new WebSocket('ws://localhost:8080/ws');
-		this.socket.addEventListener('open', function (event) {
-			console.log("Websocket connected.")
+	private socket: WebSocket;
+	private readonly url: string;
+	private readonly autoReconnectInterval: number;
+
+	constructor(url: string) {
+		this.url = url;
+		this.autoReconnectInterval = 5 * 1000;
+	}
+
+	public open() {
+		this.socket = new WebSocket(this.url);
+		this.socket.addEventListener('open', (e) => {
+			console.log("WSClient: connected.")
 		});
 
-		this.socket.addEventListener('message', function (event) {
-			let msg = JSON.parse(event.data);
+		this.socket.addEventListener('message', (e) => {
+			let msg = JSON.parse(e.data);
 
-			console.log('Message from server ', msg);
+			console.log('WSClient: message from server ', msg);
 
-			switch (msg.Event) {
-				case 'peers':
-					let peersinfo = msg.Data.peers;
+			WSClient.onMessage(msg)
+		});
 
-					for (let [idx, p] of peersinfo.entries()) {
-						peersinfo[idx]['id'] = p['Address']
-					}
-
-					peers.clearAll(true);
-					peers.parse(peersinfo, 'json')
+		this.socket.addEventListener('close', (e) => {
+			if (e.code !== 1000) {
+				this.reconnect(e);
+			} else {
+				console.log("WSClient: closed");
 			}
-
 		});
+
+		this.socket.addEventListener('error', (e) => {
+			console.error("WSClient error:", e);
+		});
+	}
+
+	private static onMessage(msg) {
+		switch (msg.Event) {
+			case 'peers':
+				let peersinfo = msg.Data.peers;
+
+				for (let [idx, p] of peersinfo.entries()) {
+					peersinfo[idx]['id'] = p['Address']
+				}
+
+				peers.clearAll(true);
+				peers.parse(peersinfo, 'json')
+		}
+	}
+
+	private reconnect(e: CloseEvent) {
+		console.log(`WSClient: retry in ${this.autoReconnectInterval}ms`, e);
+		let that = this;
+		setTimeout(function () {
+			console.log("WSClient: reconnecting...");
+			that.open();
+		}, this.autoReconnectInterval);
 	}
 
 }
