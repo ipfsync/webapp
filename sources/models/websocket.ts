@@ -1,4 +1,24 @@
 import {peers} from "models/peers";
+import * as uuidv1 from "uuid/v1"
+import uuid = require("uuid");
+
+interface MessageCmd {
+	id: string,
+	cmd: string,
+	data?: any,
+}
+
+interface MessageError {
+	code: number,
+	message: string,
+}
+
+interface MessageReply {
+	id: string,
+	ok: boolean,
+	data?: any,
+	error?: MessageError,
+}
 
 export default class WSClient {
 	private socket: WebSocket;
@@ -35,6 +55,19 @@ export default class WSClient {
 		this.socket.addEventListener('error', (e) => {
 			console.error("WSClient error:", e);
 		});
+	}
+
+	public sendCommand(cmd: string, data: any, callback: (msg: MessageReply) => void) {
+		let id = uuidv1()
+
+		let msg: MessageCmd = {
+			id: id,
+			cmd: cmd,
+			data: data
+		};
+		this.socket.send(JSON.stringify(msg))
+
+		// TODO: register callback
 	}
 
 	private static onMessage(msg) {
