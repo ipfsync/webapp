@@ -3,7 +3,7 @@ import {ui} from "webix";
 import sidebar = ui.sidebar;
 import PeersWindowView from "../views/windows/peers"
 import {peers} from "models/peers";
-import WSClient from "models/websocket";
+import ws from "models/websocket";
 import icon = ui.icon;
 
 export default class TopView extends JetView {
@@ -75,7 +75,6 @@ export default class TopView extends JetView {
 		this.peer_window = <PeersWindowView>this.ui(PeersWindowView);
 
 		// Start Websocket
-		let ws = new WSClient('ws://localhost:8080/ws');
 		ws.open();
 
 		// Peers DataCollection event

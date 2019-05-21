@@ -1,29 +1,31 @@
 import {peers} from "models/peers";
 import * as uuidv1 from "uuid/v1"
-import uuid = require("uuid");
 
 interface MessageCmd {
-	id: string,
-	cmd: string,
-	data?: any,
+	Id: string,
+	Cmd: string,
+	Data?: any,
 }
 
 interface MessageError {
-	code: number,
-	message: string,
+	Code: number,
+	Message: string,
 }
 
 interface MessageReply {
-	id: string,
-	ok: boolean,
-	data?: any,
-	error?: MessageError,
+	Id: string,
+	Ok: boolean,
+	Data?: any,
+	Error?: MessageError,
 }
 
-export default class WSClient {
+type CmdCallback = (msg: MessageReply) => void
+
+class WSClient {
 	private socket: WebSocket;
 	private readonly url: string;
 	private readonly autoReconnectInterval: number;
+	private cmdCallbacks: Map<string, CmdCallback> = new Map<string, CmdCallback>();
 
 	constructor(url: string) {
 		this.url = url;
@@ -41,7 +43,7 @@ export default class WSClient {
 
 			console.log('WSClient: message from server ', msg);
 
-			WSClient.onMessage(msg)
+			this.onMessage(msg)
 		});
 
 		this.socket.addEventListener('close', (e) => {
@@ -57,30 +59,38 @@ export default class WSClient {
 		});
 	}
 
-	public sendCommand(cmd: string, data: any, callback: (msg: MessageReply) => void) {
-		let id = uuidv1()
+	public sendCommand(cmd: string, data: any, callback: CmdCallback) {
+		let id = uuidv1();
 
 		let msg: MessageCmd = {
-			id: id,
-			cmd: cmd,
-			data: data
+			Id: id,
+			Cmd: cmd,
+			Data: data
 		};
-		this.socket.send(JSON.stringify(msg))
+		this.socket.send(JSON.stringify(msg));
 
-		// TODO: register callback
+		this.cmdCallbacks.set(id, callback);
 	}
 
-	private static onMessage(msg) {
-		switch (msg.Event) {
-			case 'peers':
-				let peersinfo = msg.Data.peers;
+	private onMessage(msg) {
+		if (msg.Id == null) {
+			// Broadcast message
+			switch (msg.Event) {
+				case 'peers':
+					let peersinfo = msg.Data.peers;
 
-				for (let [idx, p] of peersinfo.entries()) {
-					peersinfo[idx]['id'] = p['Address']
-				}
+					peersinfo.forEach((p, idx) => {
+						peersinfo[idx]['id'] = p['Address']
+					});
 
-				peers.clearAll(true);
-				peers.parse(peersinfo, 'json')
+					peers.clearAll(true);
+					peers.parse(peersinfo, 'json')
+			}
+		} else {
+			// Command reply message
+			if (this.cmdCallbacks.has(msg.Id)) {
+				this.cmdCallbacks.get(msg.Id)(msg)
+			}
 		}
 	}
 
@@ -95,3 +105,5 @@ export default class WSClient {
 
 }
 
+const ws = new WSClient('ws://localhost:8080/ws');
+export default ws;
