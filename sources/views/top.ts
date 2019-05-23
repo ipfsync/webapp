@@ -14,14 +14,16 @@ export default class TopView extends JetView {
 			view: "toolbar",
 			elements: [
 				{view: "label", label: "IPFSync", align: "center"},
+				{view: "icon", icon: "mdi mdi-link-plus", tooltip: "Add Collection"},
+				{view: "icon", icon: "mdi mdi-file-document-outline", tooltip: "New Collection"},
 			]
 		};
 
 		const menu_data = [
 			{
 				id: "collections", icon: "mdi mdi-file-cabinet", value: "Collections", data: [
-					{id: "collections_all", value: "All Collections"},
-					{id: "collections_my", value: "My Collections"}
+					{id: "collections_all", value: "Synced"},
+					{id: "collections_my", value: "My"}
 				]
 			},
 			{
