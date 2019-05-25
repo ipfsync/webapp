@@ -8,14 +8,52 @@ export default class NewcollectionWindowView extends JetView {
 			view: "window",
 			head: "New Collection: IPNS",
 			close: true,
-			move: true,
-			position: "center",
+			position: "top",
 			modal: true,
+			width: 400,
 			body: {
 				view: "form",
-				localId: "dtable",
+				localId: "ncform",
 				elements: [
-					{ view: "switch", value: 1, label:"Generate New IPNS" },
+					{
+						view: "switch",
+						localId: "generate",
+						value: 1,
+						label: "Generate New IPNS?",
+						labelWidth: 320,
+						align: "right",
+						on: {
+							'onChange': (newv, oldv) => {
+								let addrField = <ui.text>this.$$('addr');
+								if (newv == 1) {
+									addrField.disable();
+								} else {
+									addrField.enable();
+									addrField.focus();
+								}
+							}
+						}
+					},
+					{
+						view: "text",
+						localId: "addr",
+						name: "addr",
+						label: "IPNS Address",
+						disabled: true,
+						labelPosition: "top"
+					},
+					{
+						margin: 10,
+						cols: [
+							{},
+							{
+								view: "button", width: 100, value: "Cancel", click: () => {
+									(<ui.window>this.getRoot()).close();
+								}
+							},
+							{view: "button", type: "form", width: 100, value: "Continue", align: "right"},
+						]
+					}
 				]
 			}
 		}

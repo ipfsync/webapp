@@ -5,6 +5,7 @@ import PeersWindowView from "../views/windows/peers"
 import {peers} from "models/peers";
 import ws from "models/websocket";
 import icon = ui.icon;
+import NewcollectionWindowView from "views/windows/newcollection";
 
 export default class TopView extends JetView {
 	private peer_window: PeersWindowView;
@@ -14,8 +15,16 @@ export default class TopView extends JetView {
 			view: "toolbar",
 			elements: [
 				{view: "label", label: "IPFSync", align: "center"},
-				{view: "icon", icon: "mdi mdi-link-plus", tooltip: "Add Collection"},
-				{view: "icon", icon: "mdi mdi-file-document-outline", tooltip: "New Collection"},
+				{
+					view: "icon", icon: "mdi mdi-link-plus", tooltip: "Add Collection"
+				},
+				{
+					view: "icon", icon: "mdi mdi-file-document-outline", tooltip: "New Collection",
+					click: () => {
+						let newcollection_window = <NewcollectionWindowView>this.ui(NewcollectionWindowView);
+						newcollection_window.showWindow();
+					}
+				},
 			]
 		};
 
@@ -51,8 +60,8 @@ export default class TopView extends JetView {
 					view: "icon", localId: "peersIcon", icon: "mdi mdi-resistor-nodes",
 					value: 0,
 					tooltip: "#value# peer(s) connected.",
-					click: () => {
-						this.peer_window.showWindow()
+					click: function() {
+						this.$scope.peer_window.showWindow(this.$view);
 					}
 				}
 			]

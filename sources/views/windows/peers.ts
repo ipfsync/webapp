@@ -4,15 +4,13 @@ import baseview = ui.baseview;
 import {peers} from "models/peers"
 import datatable = ui.datatable;
 import ws from "models/websocket";
+import popup = ui.popup;
 
 export default class PeersWindowView extends JetView {
 	config(): any {
 		return {
-			view: "window",
+			view: "popup",
 			head: "Connected Peers",
-			close: true,
-			move: true,
-			position: "center",
 			body: {
 				view: "datatable",
 				localId: "dtable",
@@ -30,7 +28,7 @@ export default class PeersWindowView extends JetView {
 		(<datatable>this.$$('dtable')).sync(peers, null, null)
 	}
 
-	showWindow(): any {
+	showWindow(widget): any {
 		// Request peers once
 		ws.sendCommand('peers', null, msg => {
 			if (msg.Ok) {
@@ -47,6 +45,6 @@ export default class PeersWindowView extends JetView {
 			}
 		});
 
-		(<baseview>this.getRoot()).show();
+		(<popup>this.getRoot()).show(widget, {pos: "top"});
 	}
 }
