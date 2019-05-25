@@ -1,6 +1,6 @@
 import {IJetApp, JetView} from "webix-jet";
 
-export default class CollectionsView extends JetView {
+export default class CollectionsSyncedView extends JetView {
 	constructor(app: IJetApp, config: any) {
 		super(app, config);
 	}
@@ -13,7 +13,7 @@ export default class CollectionsView extends JetView {
 			},
 			cells: [
 				{
-					header: "Collections",
+					header: "Synced Collections",
 					close: false,
 					body: {
 						view: "datatable",
